@@ -2246,7 +2246,8 @@ export class ApiService implements ApiServiceAbstraction {
     );
 
     if (response.status === 200) {
-      return true;
+      const body = await response.json();
+      return body.token;
     } else {
       const error = await this.handleError(response, false, true);
       return Promise.reject(error);
