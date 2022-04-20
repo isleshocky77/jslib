@@ -118,6 +118,10 @@ export class CipherView implements View {
     return this.item.linkedFieldOptions;
   }
 
+  get hasCollections(): boolean {
+    return this.collectionIds && this.collectionIds.length > 0;
+  }
+
   linkedFieldValue(id: LinkedIdType) {
     const linkedFieldOption = this.linkedFieldOptions?.get(id);
     if (linkedFieldOption == null) {
