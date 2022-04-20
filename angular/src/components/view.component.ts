@@ -15,6 +15,7 @@ import { BroadcasterService } from "jslib-common/abstractions/broadcaster.servic
 import { CipherService } from "jslib-common/abstractions/cipher.service";
 import { CryptoService } from "jslib-common/abstractions/crypto.service";
 import { EventService } from "jslib-common/abstractions/event.service";
+import { FolderService } from "jslib-common/abstractions/folder.service";
 import { I18nService } from "jslib-common/abstractions/i18n.service";
 import { LogService } from "jslib-common/abstractions/log.service";
 import { PasswordRepromptService } from "jslib-common/abstractions/passwordReprompt.service";
@@ -43,6 +44,7 @@ export class ViewComponent implements OnDestroy, OnInit {
   @Output() onRestoredCipher = new EventEmitter<CipherView>();
 
   cipher: CipherView;
+  folderName: string;
   showPassword: boolean;
   showPasswordCount: boolean;
   showCardNumber: boolean;
@@ -62,6 +64,7 @@ export class ViewComponent implements OnDestroy, OnInit {
 
   constructor(
     protected cipherService: CipherService,
+    protected folderService: FolderService,
     protected totpService: TotpService,
     protected tokenService: TokenService,
     protected i18nService: I18nService,
@@ -124,6 +127,9 @@ export class ViewComponent implements OnDestroy, OnInit {
       this.eventService.collect(EventType.Cipher_ClientViewed, this.cipherId);
     }
     this.previousCipherId = this.cipherId;
+
+    const folders = await this.folderService.getAllDecrypted();
+    this.folderName = folders.find(folder => folder.id === cipher.folderId).name;
   }
 
   async edit() {
