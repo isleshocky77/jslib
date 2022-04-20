@@ -19,6 +19,7 @@ import { EventService } from "jslib-common/abstractions/event.service";
 import { FolderService } from "jslib-common/abstractions/folder.service";
 import { I18nService } from "jslib-common/abstractions/i18n.service";
 import { LogService } from "jslib-common/abstractions/log.service";
+import { OrganizationService} from "jslib-common/abstractions/organization.service";
 import { PasswordRepromptService } from "jslib-common/abstractions/passwordReprompt.service";
 import { PlatformUtilsService } from "jslib-common/abstractions/platformUtils.service";
 import { StateService } from "jslib-common/abstractions/state.service";
@@ -47,6 +48,7 @@ export class ViewComponent implements OnDestroy, OnInit {
   cipher: CipherView;
   collectionsList: string;
   folderName: string;
+  organizationName: string;
   showPassword: boolean;
   showPasswordCount: boolean;
   showCardNumber: boolean;
@@ -80,6 +82,7 @@ export class ViewComponent implements OnDestroy, OnInit {
     protected changeDetectorRef: ChangeDetectorRef,
     protected eventService: EventService,
     protected apiService: ApiService,
+    protected organizationService: OrganizationService,
     protected passwordRepromptService: PasswordRepromptService,
     private logService: LogService,
     protected stateService: StateService
@@ -133,6 +136,9 @@ export class ViewComponent implements OnDestroy, OnInit {
 
     const folders = await this.folderService.getAllDecrypted();
     this.folderName = folders.find(folder => folder.id === cipher.folderId).name;
+
+    const organization = await this.organizationService.get(cipher.organizationId);
+    this.organizationName = organization.name;
 
     const collections = await this.collectionsService.getAllDecrypted();
     this.collectionsList = collections.filter(collection => cipher.collectionIds.includes(collection.id)).map(collection => collection.name).join(',');
